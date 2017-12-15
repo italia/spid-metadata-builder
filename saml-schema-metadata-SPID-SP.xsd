@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2012 rel. 2 sp1 (x64) (http://www.altova.com) by GABRIELE CIASULLO (DIGITPA) -->
-<schema xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:spid="http/agid/gov/it/SPID/metadata" xmlns:xml="http://www.w3.org/XML/1998/namespace" targetNamespace="urn:oasis:names:tc:SAML:2.0:metadata" elementFormDefault="unqualified" attributeFormDefault="unqualified" blockDefault="substitution" version="2.0">
-	<import namespace="http://www.w3.org/2001/04/xmlenc#" schemaLocation="http://www.w3.org/TR/2002/REC-xmlenc-core-20021210/xenc-schema.xsd"/>
-	<import namespace="urn:oasis:names:tc:SAML:2.0:assertion" schemaLocation="http://docs.oasis-open.org/security/saml/v2.0/saml-schema-assertion-2.0.xsd"/>
-	<import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
-	<import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
-	<import namespace="http/agid/gov/it/SPID/metadata" schemaLocation="saml-SPID-metadata-1.0.xsd"/>
+<schema xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+	xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	targetNamespace="urn:oasis:names:tc:SAML:2.0:metadata" elementFormDefault="unqualified"
+	attributeFormDefault="unqualified" blockDefault="substitution" version="2.0">
+	<import namespace="http://www.w3.org/2001/04/xmlenc#"
+		schemaLocation="http://www.w3.org/TR/2002/REC-xmlenc-core-20021210/xenc-schema.xsd"/>
+	<import namespace="urn:oasis:names:tc:SAML:2.0:assertion"
+		schemaLocation="http://docs.oasis-open.org/security/saml/v2.0/saml-schema-assertion-2.0.xsd"/>
+	<import namespace="http://www.w3.org/2000/09/xmldsig#"
+		schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+	<import namespace="http://www.w3.org/XML/1998/namespace"
+		schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+	<annotation>
+		<documentation> Document identifier: Location: Revision history: </documentation>
+	</annotation>
 	<simpleType name="entityIDType">
 		<restriction base="anyURI">
 			<maxLength value="1024"/>
@@ -47,8 +58,10 @@
 	<element name="EntityDescriptor" type="md:EntityDescriptorType"/>
 	<complexType name="EntityDescriptorType">
 		<sequence>
-			<element ref="ds:Signature"  minOccurs="0" maxOccurs="1"/>
-			<element ref="md:SPSSODescriptor"/>
+			<element ref="ds:Signature"/>
+			<choice>
+				<element ref="md:SPSSODescriptor"/>
+			</choice>
 			<element ref="md:Organization" minOccurs="0"/>
 		</sequence>
 		<attribute name="entityID" type="md:entityIDType" use="required"/>
@@ -68,9 +81,10 @@
 	<element name="OrganizationURL" type="md:localizedURIType"/>
 	<complexType name="RoleDescriptorType" abstract="true">
 		<sequence>
-			<element ref="md:KeyDescriptor" minOccurs="0" maxOccurs="unbounded"/>
+			<element ref="md:KeyDescriptor"/>
 		</sequence>
-		<attribute name="protocolSupportEnumeration" type="md:anyURIListType" use="required" fixed="urn:oasis:names:tc:SAML:2.0:protocol"/>
+		<attribute name="protocolSupportEnumeration" type="md:anyURIListType" use="required"
+			fixed="urn:oasis:names:tc:SAML:2.0:protocol"/>
 	</complexType>
 	<simpleType name="anyURIListType">
 		<list itemType="anyURI"/>
@@ -80,7 +94,7 @@
 		<sequence>
 			<element ref="ds:KeyInfo"/>
 		</sequence>
-		<attribute name="use" type="md:KeyTypes" use="optional" fixed="signing"/>
+		<attribute name="use" type="md:KeyTypes" use="required"/>
 	</complexType>
 	<simpleType name="KeyTypes">
 		<restriction base="string">
@@ -88,18 +102,21 @@
 			<enumeration value="signing"/>
 		</restriction>
 	</simpleType>
+	
+
 	<complexType name="SSODescriptorType" abstract="true">
 		<complexContent>
 			<extension base="md:RoleDescriptorType">
 				<sequence>
 					<element ref="md:SingleLogoutService" minOccurs="0" maxOccurs="unbounded"/>
-					<element ref="md:NameIDFormat" minOccurs="0"/>
+					<element ref="md:NameIDFormat" minOccurs="1" maxOccurs="1"/>
 				</sequence>
 			</extension>
 		</complexContent>
 	</complexType>
 	<element name="SingleLogoutService" type="md:SingleLogoutEndpointType"/>
-	<element name="NameIDFormat" type="anyURI" fixed="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"/>
+	<element name="NameIDFormat" type="anyURI"
+		fixed="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"/>
 	<element name="SingleSignOnService" type="md:EndpointType"/>
 	<element name="SPSSODescriptor" type="md:SPSSODescriptorType"/>
 	<complexType name="SPSSODescriptorType">
@@ -109,8 +126,8 @@
 					<element ref="md:AssertionConsumerService" maxOccurs="unbounded"/>
 					<element ref="md:AttributeConsumingService" maxOccurs="unbounded"/>
 				</sequence>
-				<attribute name="WantAssertionsSigned" type="boolean" use="required"/>
-				<attribute name="AuthnRequestsSigned" type="boolean" use="optional"/>
+				<attribute name="WantAssertionsSigned" type="boolean" use="optional"/>
+				<attribute name="AuthnRequestsSigned" type="boolean" use="required"/>
 			</extension>
 		</complexContent>
 	</complexType>
@@ -129,7 +146,7 @@
 	<element name="ServiceDescription" type="md:localizedNameType"/>
 	<element name="RequestedAttribute" type="md:RequestedAttributeType"/>
 	<complexType name="RequestedAttributeType">
-		<attribute name="Name" type="spid:SPIDAttributeName" use="required"/>
+		<attribute name="Name" type="string" use="required"/>
 		<attribute name="NameFormat" type="anyURI" use="optional"/>
 		<attribute name="FriendlyName" type="string" use="optional"/>
 	</complexType>
